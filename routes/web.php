@@ -22,4 +22,7 @@ Route::get('/signin',[PageController::class,'signin']);
 Route::get('/signup',[PageController::class,'signup']);
 Route::get('/add',[PageController::class,'add']);
 Route::post('/product/store',[PageController::class,'storeproduct'])->name('product.store');
+Route::get('/product/edit/{product_id}',[PageController::class,'edit'])->name('product.edit');
+Route::post('/product/update/{product_id}',[PageController::class,'updateproduct'])->name('product.update');
 
+Route::get('/product/delete/{product_id}',[PageController::class,'deleteproduct'])->name('product.delete');

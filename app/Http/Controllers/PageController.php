@@ -27,6 +27,18 @@ public function add(){
         return redirect(route('index'));
     }
 
+    public function updateproduct(Request $request,$id){
+        $product = Product::find($id);
+        $data=$request->all();
+        $product->update($data);
+        return redirect(route('index'));
+    }
+
+    public function deleteproduct($id){
+        $product = Product::find($id);
+        $product->delete($product->id);
+        return redirect(route('index'));
+    }
 
     public function signup(){
         return view('register');
@@ -44,5 +56,12 @@ public function add(){
         $products = Product::all(); 
         return view('product',compact('products'));
        
+    }
+
+    public function edit($product_id)
+    {
+        $product =Product::find($product_id);
+        // dd($product);
+        return view('editproduct',compact('product'));
     }
 }

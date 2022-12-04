@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('price');
             $table->longtext('image_url');
-            $table->longText('description');
+            $table->longText('description')->nullable();
             $table->timestamps();
         });
     }
