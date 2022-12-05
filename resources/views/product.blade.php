@@ -1,7 +1,14 @@
 @extends('master.main')
 @section('content')
-    
-    <!-- card -->
+{{-- start kalti --}}
+<script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
+
+
+
+
+
+
+<!-- card -->
 
     <div class="p-20 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-20">
        
@@ -30,14 +37,75 @@
            
         </div>
         <a href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add to cart</a>
-        
+        <a id="payment-button" href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Pay Now</a>
+          
     </div>
 </div>
 @endforeach
-
+{{$products->links()}}
     </div>
    
 
     <!-- card end -->
 
+
+
+    <script>
+        var config = {
+            // replace the publicKey with yours
+            "publicKey": "test_public_key_99697f8fd7fc41e8b922cb5f84cf4e82",
+            "productIdentity": "1234567890",
+            "productName": "Dragon",
+            "productUrl": "http://gameofthrones.wikia.com/wiki/Dragons",
+            "paymentPreference": [
+                "KHALTI",
+                // "EBANKING",
+                // "MOBILE_BANKING",
+                // "CONNECT_IPS",
+                // "SCT",
+                ],
+            "eventHandler": {
+                onSuccess (payload) {
+                    // hit merchant api for initiating verfication
+                    console.log(payload);
+                    if(payload.idx)
+                    {
+                        $.ajaxSetup({
+                            headers:{
+                            'X-CSRF-TOKEN': '{{csrf_token()}}',
+                            }
+                });
+                $.ajax({
+                    method:'POST',
+                    url: "{{route('khalti.verify')}}",
+                    data: payload,
+
+                    SUCCESS: function (response)
+                    {
+                        console.log('successfully paid');
+                    },
+                    error: function(data)
+                    {
+                        console.log(data.message);
+                    }
+                });
+                    }
+                },
+                onError (error) {
+                    console.log(error);
+                },
+                onClose () {
+                    console.log('widget is closing');
+                }
+            }
+        };
+    
+        var checkout = new KhaltiCheckout(config);
+        var btn = document.getElementById("payment-button");
+        btn.onclick = function () {
+            // minimum transaction amount must be 10, i.e 1000 in paisa.
+            checkout.show({amount: 1000});
+        }
+    </script>
+    {{-- khalti end --}}
 @endsection

@@ -22,8 +22,21 @@ public function add(){
 }
     public function storeproduct(Request $request){
         // dd($request->all());
-        $data=$request->all();
+        // $data=$request->all();
+        $data = $request->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'description' => 'required',
+            'image_url' =>'required',
+        ]);
         Product::create($data);
+
+
+        // $product =new Product();
+        // // $product->name = $request->name;
+        // // $product->price = $request->price;
+        // // $product->save();
+
         return redirect(route('index'));
     }
 
@@ -53,7 +66,7 @@ public function add(){
     }
 
     public function product(){
-        $products = Product::all(); 
+        $products = Product::paginate(2); 
         return view('product',compact('products'));
        
     }

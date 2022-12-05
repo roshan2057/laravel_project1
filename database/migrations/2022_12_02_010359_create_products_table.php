@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('price');
             $table->longtext('image_url');
             $table->longText('description')->nullable();
+            // $table->longText('description')->default('NO description');
             $table->timestamps();
         });
     }
